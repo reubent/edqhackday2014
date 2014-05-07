@@ -32,7 +32,7 @@ foreach ($categories as $category) {
 	if (!in_array($category, array_keys($matchedCategories))) {
 		$summarisedOut[$category] = $category;
 	} else {
-		$builtCategories[$category] = $category;
+		$builtCategories[$category] = $scores[$category];
 		$out['tweetsPerCategory'][$category] = $matchedCategories[$category];
 	}
 	if (!isset($scores[$category])) {
@@ -43,9 +43,11 @@ foreach ($categories as $category) {
 }
 asort($out['scores']);
 asort($out['tweetsPerCategory']);
+arsort($builtCategories);
+
 $counter = 0;
 $notIn = [];
-foreach ($builtCategories as $category) {
+foreach ($builtCategories as $category => $score) {
 	if (++$counter < WANTED_CATEGORIES) {
 		$out['categories'][$category] = $redis->getSet("tweets_in_".$category);
 		$not = $redis->getSet("not_in_".$category);
