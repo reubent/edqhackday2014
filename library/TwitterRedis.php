@@ -155,9 +155,9 @@ class TwitterRedis {
 		$out = [];
 		$ref = null;
 		foreach ($this->_redis->sscan($key, $ref) as $word) {
-			$out[] = $word;
+			$out[] = @json_decode($word, true);
 		}
-		return $word;
+		return $out;
 	}
 
 	public function deleteKey($key) {

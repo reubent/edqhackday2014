@@ -82,7 +82,11 @@ function summarise(TwitterRedis $redis) {
 		}
 	}
 	foreach ($scores as $category => $score) {
-		print "For category $category score is $score in {$matched[$category]} matching tweets\n";
+		if (isset($matched[$category])) {
+			print "For category $category score is $score in {$matched[$category]} matching tweets\n";
+		} else {
+			print "For category $category score is $score\n";
+		}
 	}
 	$redis->set("MatchedCategories", json_encode($matched), 7200);
 	$redis->set("ScoredCategories", json_encode($scores), 7200);

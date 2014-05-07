@@ -32,21 +32,25 @@ foreach ($categories as $category) {
 	if (!in_array($category, array_keys($matchedCategories))) {
 		$summarisedOut[$category] = $category;
 	} else {
-		$builtCategories[$category] = $category;
+		$builtCategories[$category] = $scores[$category];
 		$out['tweetsPerCategory'][$category] = $matchedCategories[$category];
 	}
-	if (isset($scores[$category])) {
+	if (!isset($scores[$category])) {
 		$out['scores'][$category] = 0;
+	} else {
+		$out['scores'][$category] = $scores[$category];
 	}
 }
 asort($out['scores']);
 asort($out['tweetsPerCategory']);
+arsort($builtCategories);
+
 $counter = 0;
 $notIn = [];
-foreach ($builtCategories as $category) {
-	if (++$counter <= WANTED_CATEGORIES) {
-		$out['categories'][$category] = json_decode($redis->getSet("tweets_in_".$category, true));
-		$not = json_decode($redis->getSet("not_in_".$category, true));
+foreach ($builtCategories as $category => $score) {
+	if (++$counter < WANTED_CATEGORIES) {
+		$out['categories'][$category] = $redis->getSet("tweets_in_".$category);
+		$not = $redis->getSet("not_in_".$category);
 		if (is_array($not)) {
 			$notIn = array_merge($notIn, $not);
 		}
@@ -54,5 +58,6 @@ foreach ($builtCategories as $category) {
 		unset($builtCategories[$category]);
 	}
 }
+$out['categories']['other'] = $notIn;
 header("Content-type: application/json");
 print json_encode($out);
