@@ -96,4 +96,39 @@ class TwitterRedis {
 		}
 		return -1;
 	}
+
+	public function addOrIncrCategoryMember($category, $member) {
+		if (!$this->isConnected()) {
+			$this->connect($this->_server);
+		}
+		if (!$this->_redis->sIsMember("categories", $category)) {
+			$this->_redis->sAdd("categories", $category);
+		}
+		$sKey = "categoryS$category";
+		$zKey = "category$category";
+		if (!$this->_redis->sIsMember($sKey, $member)) {
+			$this->_redis->sAdd($sKey, $member);
+			$this->_redis->zAdd($zKey, 1, $member);
+		} else {
+			$this->_redis->zIncrBy($zKey, 1, $member);
+		}
+	}
+
+	public function getScoresForWord($word) {
+		if (!$this->isConnected()) {
+			$this->connect($this->_server);
+		}
+		$key = null;
+		$result = [];
+		foreach ($this->_redis->sScan("categories", $key) as $category) {
+			$score = $this->_redis->zScore("categories".$category, $word);
+			if ($score > 0) {
+				if (!isset($result[$category])) {
+					$result[$category] = 0;
+				}
+				$result[$category] += $score;
+			}
+		}
+		return $result;
+	}
 }
