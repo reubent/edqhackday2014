@@ -35,8 +35,10 @@ foreach ($categories as $category) {
 		$builtCategories[$category] = $category;
 		$out['tweetsPerCategory'][$category] = $matchedCategories[$category];
 	}
-	if (isset($scores[$category])) {
+	if (!isset($scores[$category])) {
 		$out['scores'][$category] = 0;
+	} else {
+		$out['scores'][$category] = $scores[$category];
 	}
 }
 asort($out['scores']);
