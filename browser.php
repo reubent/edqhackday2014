@@ -39,11 +39,14 @@ $counter = 0;
 $notIn = [];
 foreach ($builtCategories as $category) {
 	if (++$counter <= WANTED_CATEGORIES) {
-		$out['categories'][$category] = json_decode($redis->get("tweets_in_".$category, true));
-		$notIn = array_merge($notIn, json_decode($redis->get("not_in_".$category, true)));
+		$out['categories'][$category] = json_decode($redis->getSet("tweets_in_".$category, true));
+		$not = json_decode($redis->getSet("not_in_".$category, true));
+		if (is_array($not)) {
+			$notIn = array_merge($notIn, $not);
+		}
 	} else {
 		unset($builtCategories[$category]);
 	}
 }
-
+header("Content-type: application/json");
 print json_encode($out);
