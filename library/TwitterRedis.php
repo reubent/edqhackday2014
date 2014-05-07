@@ -57,7 +57,11 @@ class TwitterRedis {
 		if (!$this->isConnected()) {
 			$this->connect($this->_server);
 		}
-		$this->_redis->incrBy($key, $by);
+		if ($this->_redis->exists("key")) {
+			$this->_redis->incrBy($key, $by);
+		} else {
+			$this->_redis->set($key, $by, 7200);
+		}
 	}
 
 	public function addToSet($key, $value) {
@@ -67,6 +71,17 @@ class TwitterRedis {
 		return $this->_redis->sAdd($key, $value);
 	}
 
+	public function getCategoryList() {
+		if (!$this->isConnected()) {
+			$this->connect($this->_server);
+		}
+		$categories = [];
+		foreach ($this->_redis->sscan("categories", $key) as $category) {
+			$categories[] = $category;
+		}
+		return $categories;
+	}
+	
 	public function removeFromSet($key, $value) {
 		if (!$this->isConnected()) {
 			$this->connect($this->_server);
@@ -117,6 +132,20 @@ class TwitterRedis {
 		} else {
 			$this->_redis->zIncrBy($zKey, 1, $member);
 		}
+	}
+
+	public function getKeys($pattern) {
+		if (!$this->isConnected()) {
+			$this->connect($this->_server);
+		}
+		return $this->_redis->keys($pattern);
+	}
+
+	public function get($key) {
+		if (!$this->isConnected()) {
+			$this->connect($this->_server);
+		}
+		return $this->_redis->get($key);
 	}
 
 	public function getScoresForWord($word) {
