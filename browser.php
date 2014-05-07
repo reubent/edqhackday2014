@@ -44,9 +44,9 @@ asort($out['tweetsPerCategory']);
 $counter = 0;
 $notIn = [];
 foreach ($builtCategories as $category) {
-	if (++$counter <= WANTED_CATEGORIES) {
-		$out['categories'][$category] = json_decode($redis->getSet("tweets_in_".$category, true));
-		$not = json_decode($redis->getSet("not_in_".$category, true));
+	if (++$counter < WANTED_CATEGORIES) {
+		$out['categories'][$category] = $redis->getSet("tweets_in_".$category);
+		$not = $redis->getSet("not_in_".$category);
 		if (is_array($not)) {
 			$notIn = array_merge($notIn, $not);
 		}
@@ -54,5 +54,6 @@ foreach ($builtCategories as $category) {
 		unset($builtCategories[$category]);
 	}
 }
+$out['categories']['other'] = $notIn;
 header("Content-type: application/json");
 print json_encode($out);
