@@ -102,7 +102,7 @@ class TwitterRedis {
 			$this->connect($this->_server);
 		}
 		$category = strtolower($category);
-		$member = strtolower($member);
+		$member = stem($member, STEM_ENGLISH);
 		if (!$this->_redis->sIsMember("categories", $category)) {
 			$this->_redis->sAdd("categories", $category);
 			$this->_redis->zAdd("zCategories", 1, $category);
@@ -123,7 +123,7 @@ class TwitterRedis {
 		if (!$this->isConnected()) {
 			$this->connect($this->_server);
 		}
-		$word = strtolower($word);
+		$word = stem($word, STEM_ENGLISH);
 		$key = null;
 		$result = [];
 		foreach ($this->_redis->sscan("categories", $key) as $category) {
