@@ -127,7 +127,7 @@ class TwitterRedis {
 		$key = null;
 		$result = [];
 		foreach ($this->_redis->sscan("categories", $key) as $category) {
-			$score = $this->_redis->zScore("categories".$category, $word);
+			$score = $this->_redis->zScore("category".$category, $word);
 			if ($score > 0) {
 				if (!isset($result[$category])) {
 					$result[$category] = 0;
@@ -136,7 +136,7 @@ class TwitterRedis {
 			}
 		}
 		foreach ($result as $cat => &$score) {
-			$quotient = $this->_redis->zScore("zcategories", $cat);
+			$quotient = $this->_redis->zScore("zCategories", $cat);
 			if ($quotient > 0) {
 				$score /= $quotient;
 			}

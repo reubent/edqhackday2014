@@ -22,11 +22,13 @@ function processItem($item, TwitterRedis $redis) {
 	$words = explode(" ", $text);
 	$result = [];
 	foreach ($words as $word) {
+		print "\tWord is '$word' - will be stemmed as '".stem($word, STEM_ENGLISH)."'\n";
 		if (substr($word, 0, 1 == "@")) {
 			print "\t$word is a username - skipping\n";
 			continue;
 		}
 		foreach ($redis->getScoresForWord($word) as $category => $score) {
+			print "\tFor category $category got score $score\n";
 			if (!isset($result[$category])) {
 				$result[$category] = $score;
 			} else {
