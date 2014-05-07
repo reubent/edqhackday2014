@@ -148,6 +148,13 @@ class TwitterRedis {
 		return $this->_redis->get($key);
 	}
 
+	public function deleteKey($key) {
+		if (!$this->isConnected()) {
+			$this->connect($this->_server);
+		}
+		$this->_redis->del($key);
+	}	
+
 	public function getScoresForWord($word) {
 		if (!$this->isConnected()) {
 			$this->connect($this->_server);
