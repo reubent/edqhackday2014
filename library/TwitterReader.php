@@ -34,7 +34,7 @@ class TwitterReader extends OauthPhirehose {
 			print date("Y-m-d H:i:s (") . strlen($status) . "): This is NOT a tweet!\n";
 			return;
 		}
-		$this->_redis->set("queue__".time()."__".$data['id'], $status, 3600);
+		$this->_redis->addToPostQueue("queue__".time()."__".$data['id'], $status);
 		echo date("Y-m-d H:i:s (") . strlen($status) . "):" . $data['id'] ." " .$data['user']['name'] . ": ".  $data['text'] . "\n";
 	}
 
