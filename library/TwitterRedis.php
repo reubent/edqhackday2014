@@ -89,7 +89,7 @@ class TwitterRedis {
 	}
 
 	public function getOneFromPostQueue() {
-		$key = $this->_redis->sPop("PostQueue");
+		$key = $this->_redis->sPop("postQueue");
 		if (false !== $entry = $this->_redis->get($key)) {
 			$this->_redis->remove($key);
 			return json_decode($entry, true);
