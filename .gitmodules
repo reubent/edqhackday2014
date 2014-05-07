@@ -1,0 +1,3 @@
+[submodule "vendor/phirehose"]
+	path = vendor/phirehose
+	url = git@github.com:fennb/phirehose
