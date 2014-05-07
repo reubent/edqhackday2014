@@ -1,13 +1,14 @@
 <?php
 
-require_once 'library/config.php';
+require_once '../library/config.php';
 define("WANTED_CATEGORIES", 4);
 $redis = new TwitterRedis(REDIS_SERVER);
 $out = [
 	'categories' => [],
 	'tweetsPerCategory' => [],
 	'scores' => [],
-	'tokensInCategory' => []
+	'tokensInCategory' => [],
+	'graphData' => []
 ];
 //if ($redis->get("DataWaiting") < 1) {
 //	print json_encode([ "error" => "No new data"]);
@@ -59,5 +60,10 @@ foreach ($builtCategories as $category => $score) {
 	}
 }
 $out['categories']['other'] = $notIn;
+$graph = $redis->getKeys("MatchedCategories_*");
+asort($graph);
+foreach ($graph as $key) {
+	$out['graphData'][] = json_decode($redis->get($key), true);
+}
 header("Content-type: application/json");
 print json_encode($out);

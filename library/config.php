@@ -1,7 +1,7 @@
 <?php
-require_once('vendor/phirehose/lib/OauthPhirehose.php');
-require_once('library/TwitterRedis.php');
-require_once('library/TwitterReader.php');
+require_once('../vendor/phirehose/lib/OauthPhirehose.php');
+require_once('../library/TwitterRedis.php');
+require_once('../library/TwitterReader.php');
 
 //These are the application key and secret
 //You can create an application, and then get this info, from https://dev.twitter.com/apps
