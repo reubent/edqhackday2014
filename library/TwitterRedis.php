@@ -101,8 +101,13 @@ class TwitterRedis {
 		if (!$this->isConnected()) {
 			$this->connect($this->_server);
 		}
+		$category = strtolower($category);
+		$member = strtolower($member);
 		if (!$this->_redis->sIsMember("categories", $category)) {
 			$this->_redis->sAdd("categories", $category);
+			$this->_redis->zAdd("zCategories", 1, $category);
+		} else {
+			$this->_redis->zIncrBy("zCategories", 1, $category);
 		}
 		$sKey = "categoryS$category";
 		$zKey = "category$category";
@@ -118,15 +123,22 @@ class TwitterRedis {
 		if (!$this->isConnected()) {
 			$this->connect($this->_server);
 		}
+		$word = strtolower($word);
 		$key = null;
 		$result = [];
-		foreach ($this->_redis->sScan("categories", $key) as $category) {
+		foreach ($this->_redis->sscan("categories", $key) as $category) {
 			$score = $this->_redis->zScore("categories".$category, $word);
 			if ($score > 0) {
 				if (!isset($result[$category])) {
 					$result[$category] = 0;
 				}
 				$result[$category] += $score;
+			}
+		}
+		foreach ($result as $cat => &$score) {
+			$quotient = $this->_redis->zScore("zcategories", $cat);
+			if ($quotient > 0) {
+				$score /= $quotient;
 			}
 		}
 		return $result;
