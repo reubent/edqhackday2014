@@ -1,0 +1,65 @@
+
+.filterable {
+	margin-top: 15px;
+}
+.filterable .panel-heading .pull-right {
+	margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+	background-color: transparent;
+	border: none;
+	cursor: auto;
+	box-shadow: none;
+	padding: 0;
+	height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+	color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+	color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+	color: #333;
+}
+
+/*canvas {*/
+	/*width: 100%;*/
+	/*height: 450px;*/
+/*}*/
+
+#twit-cat {
+	table-layout: fixed;
+	width: 960px;
+	display: inline-block;
+}
+
+.twit-row {
+	height: 400px;
+	width: 300px;
+	overflow-y: auto;
+}
+
+#footer .row,
+.twit-head {
+	width: 960px;
+	display: inline-block;
+	text-align: left;
+}
+
+#footer {
+	background-color: #eee;
+	height: 60px;
+}
+
+.twit-ctnt {
+	padding-left: 70px;
+	padding-right: 5px;
+	text-align: left;
+}
+
+.twit-legend-tbl {
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+}
