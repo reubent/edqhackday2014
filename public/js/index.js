@@ -122,7 +122,9 @@ function Index($) {
 console.log(index);
 			var twitHtml = this.twitHtml(json);
 			$('th .cat').eq(index).html(title);
+
 			$('#data-row .twit-row').eq(index).prepend($(twitHtml));
+//			$('#data-row .twit-row').eq(index).html(twitHtml);
 		},
 
 		refreshLoop: function() {
